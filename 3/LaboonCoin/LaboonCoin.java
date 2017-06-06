@@ -23,7 +23,24 @@ public class LaboonCoin {
      */
     
     public String createBlock(String data, int prevHash, int nonce, int hash) {
-	return "TODO";
+
+        StringBuilder dataBlock = new StringBuilder();
+        
+        dataBlock.append(data);
+        dataBlock.append("|");
+        dataBlock.append("0");
+        dataBlock.append(prevHash);
+        dataBlock.append("|");
+        dataBlock.append("0");
+        dataBlock.append(nonce);
+        dataBlock.append("|");
+        dataBlock.append("0");
+        dataBlock.append(hash);
+
+        String block = dataBlock.toString();
+
+
+	   return block;
     }
 
     /**
@@ -65,7 +82,15 @@ public class LaboonCoin {
     
     public int hash(String data) {
 	// TODO
-	return -1;
+        char[] data = data.toCharArray();
+        int n = 10000000
+
+        for( int i = 0; i < data.length; i++){
+            int ASCII = int data[i];
+           n = (n * ASCII) + n;
+        }
+
+	return n;
     }
 
     /**
@@ -85,6 +110,7 @@ public class LaboonCoin {
     
     public boolean validHash(int difficulty, int hash) {
 	// TODO
+
 	return true;
     }
 
@@ -111,7 +137,7 @@ public class LaboonCoin {
 	int hashVal = 0;
 	boolean foundNonce = false;
 	while (!foundNonce) {
-	    toTry = rootData + String.format("%08x", nonce);
+	    toTry = String.format("%08x", prevHash);
 	    // Uncomment for debugging purposes
 	    // System.out.print("Trying: " + toTry + ".. ");
 	    
