@@ -126,6 +126,7 @@ public class LaboonCoin {
 		String hex = Integer.toHexString(hash);
         hex = String.format("%08X", hash);
 		for(int i = 2; i < hex.length() && difficulty > 0; ++i){
+
 			if(hex.charAt(i) == '0'){
 				--difficulty;
 			}else{
