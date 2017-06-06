@@ -15,7 +15,18 @@ public class LaboonCoinTest {
 	@Test
 	public void testValidHash(){
 		LaboonCoin test = new LaboonCoin();
-		assertEquals(test.validHash(2, 0000001), true);
+		
+		assertEquals(true, test.validHash(2, 3));
+		assertEquals(false, test.validHash(2, 300000000));
+		assertEquals(false, test.validHash(3, 3000000));
+
+	}
+	
+	@Test
+	public void testHash(){
+		LaboonCoin test = new LaboonCoin();
+		
+		//assertEquals();
 	}
     
 }
