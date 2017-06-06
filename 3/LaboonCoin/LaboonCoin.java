@@ -25,20 +25,25 @@ public class LaboonCoin {
     public String createBlock(String data, int prevHash, int nonce, int hash) {
 
         StringBuilder dataBlock = new StringBuilder();
+
+        String hex1 = String.format("%08x", prevHash);
+        String hex2 = String.format("%08x", nonce);
+        String hex3 = String.format("%08x", hash);
         
+  
+
         dataBlock.append(data);
         dataBlock.append("|");
-        dataBlock.append("0");
-        dataBlock.append(prevHash);
+
+        dataBlock.append(hex1);
         dataBlock.append("|");
-        dataBlock.append("0");
-        dataBlock.append(nonce);
+
+        dataBlock.append(hex2);
         dataBlock.append("|");
-        dataBlock.append("0");
-        dataBlock.append(hash);
+
+        dataBlock.append(hex3);
 
         String block = dataBlock.toString();
-
 
 	   return block;
     }
@@ -87,12 +92,14 @@ public class LaboonCoin {
     
     public int hash(String data) {
 	// TODO
-        char[] data = data.toCharArray();
-        int n = 10000000
+        char[] dataNew = data.toCharArray();
+        int n = 10000000;
 
-        for( int i = 0; i < data.length; i++){
-            int ASCII = int data[i];
-           n = (n * ASCII) + n;
+
+        for(int i = 0; i < dataNew.length; i++){
+            int ASCII = dataNew[i];
+            n = (n * ASCII) + n;
+            
         }
 
 	return n;
@@ -117,8 +124,9 @@ public class LaboonCoin {
 	// TODO
 
 		String hex = Integer.toHexString(hash);
+        hex = String.format("%08X", hash);
 		for(int i = 2; i < hex.length() && difficulty > 0; ++i){
-			if(hex.charAt(i).equals('0')){
+			if(hex.charAt(i) == '0'){
 				--difficulty;
 			}else{
 				return false;
@@ -128,7 +136,7 @@ public class LaboonCoin {
 
     }
 
-    /**
+        /**
      * Given some data and the previous hash value, find a nonce that
      * will make the data + hex string version of the previous hash 
      * equal to a hash value with a given number of 0's at its front.
@@ -145,29 +153,27 @@ public class LaboonCoin {
      */
     
     public int mine(String data, int prevHash, int difficulty) {
-	String rootData = data + String.format("%08x", prevHash);
-	int nonce = 0;
-	String toTry;
-	int hashVal = 0;
-	boolean foundNonce = false;
-	while (!foundNonce) {
-
-		// Uncomment for debugging purposes
-		toTry = String.format("%08x", prevHash) + String.format("%08x", nonce) + data;	    
-    // System.out.print("Trying: " + toTry + ".. ");
-	    
-	    hashVal = hash(toTry);
-	    System.out.println("hash: " + String.format("%08x", hashVal));
-	    if (validHash(difficulty, hashVal)) {
-		foundNonce = true;
-	    } else {
-		nonce++;
-	    }
-	    if (nonce == -1) {
-		System.err.println("Could not find nonce");
-	    }
-	}
-	return nonce;
+    int nonce = 0;
+    String toTry;
+    int hashVal = 0;
+    boolean foundNonce = false;
+    while (!foundNonce) {
+        toTry = String.format("%08x", prevHash) + String.format("%08x", nonce) + data;
+        // Uncomment for debugging purposes
+        // System.out.print("Trying: " + toTry + ".. ");
+        
+        hashVal = hash(toTry);
+        System.out.println("hash: " + String.format("%08x", hashVal));
+        if (validHash(difficulty, hashVal)) {
+        foundNonce = true;
+        } else {
+        nonce++;
+        }
+        if (nonce == -1) {
+        System.err.println("Could not find nonce");
+        }
+    }
+    return nonce;
     }
 
     /**
@@ -179,32 +185,37 @@ public class LaboonCoin {
      */
     
     public void run(int difficulty) {
-	Scanner sc = new Scanner(System.in);
-	boolean keepRunning = true;
-	int prevHash = 0;
-	while (keepRunning) {
-	    System.out.print("Enter data > ");
-	    String data = sc.nextLine();
-	    if (data.equalsIgnoreCase("q")) {
-		System.out.println("Final Blockchain:");
-		System.out.println(getBlockChain());
-		keepRunning = false;
-	    } else {
-		System.out.println("Hash (just data) = " + String.format("%08x", hash(data)));
-		System.out.println("Mining..");
-		int nonce = mine(data, prevHash, difficulty);
-		System.out.println("Found nonce " + String.format("%08x", nonce) + "!");
-		int finalHash = hash(data 
-				     + String.format("%08x", prevHash)
-				     + String.format("%08x", nonce));
-		System.out.println("Final hash " + String.format("%08x", finalHash) + "!");
-		prevHash = finalHash;
+    Scanner sc = new Scanner(System.in);
+    boolean keepRunning = true;
+    int prevHash = 0;
+    while (keepRunning) {
+        System.out.print("Enter data > ");
+        String data = sc.nextLine();
+        if (data.equalsIgnoreCase("q")) {
+        System.out.println("Final Blockchain:");
+        System.out.println(getBlockChain());
+        keepRunning = false;
+        } else {
+        System.out.println("Hash (just data) = " + String.format("%08x", hash(data)));
+        System.out.println("Mining..");
+        int nonce = mine(data, prevHash, difficulty);
+        System.out.println("Found nonce " + String.format("%08x", nonce) + "!");
+        int finalHash = hash( 
+                     String.format("%08x", prevHash)
+                     + String.format("%08x", nonce)
+                     + data);
+        System.out.println("Final hash " + String.format("%08x", finalHash) + "!");
+        
 
-		String newBlock = createBlock(data, prevHash, nonce, finalHash);
-		blockchain.add(newBlock);
-	    }
-	    
-	}
+        String newBlock = createBlock(data, prevHash, nonce, finalHash);
+
+        //printing prev and final were switched
+        prevHash = finalHash;
+
+        blockchain.add(newBlock);
+        }
+        
+    }
     }
 
     /**
@@ -219,19 +230,19 @@ public class LaboonCoin {
      */
     
     public static void main(String[] args) {
-	int difficulty = 3;
-	try {
-	    difficulty = Integer.parseInt(args[0]);
-	    if (difficulty < 0) {
-		System.out.println("Negative numbers not allowed, defaulting to dificulty = 3");
-		difficulty = 3;
-	    }
-	} catch (ArrayIndexOutOfBoundsException oobex) {
-	    System.out.println("No argument detected, defaulting to difficulty = 3");
-	} catch (NumberFormatException nfex) {
-	    System.out.println("Could not parse argument, defaulting to difficulty = 3");
-	}
-	LaboonCoin lc = new LaboonCoin();
-	lc.run(difficulty);
+    int difficulty = 3;
+    try {
+        difficulty = Integer.parseInt(args[0]);
+        if (difficulty < 0) {
+        System.out.println("Negative numbers not allowed, defaulting to dificulty = 3");
+        difficulty = 3;
+        }
+    } catch (ArrayIndexOutOfBoundsException oobex) {
+        System.out.println("No argument detected, defaulting to difficulty = 3");
+    } catch (NumberFormatException nfex) {
+        System.out.println("Could not parse argument, defaulting to difficulty = 3");
+    }
+    LaboonCoin lc = new LaboonCoin();
+    lc.run(difficulty);
     }
 }
