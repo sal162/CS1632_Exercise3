@@ -91,8 +91,8 @@ public class LaboonCoin {
     public boolean validHash(int difficulty, int hash) {
 	// TODO
 		String hex = Integer.toHexString(hash);
-		for(int i = 2; i < hex.length() && difficulty > 0; ++i){
-			if(hex.charAt(i).equals('0')){
+		for(int i = 0; i < hex.length() && difficulty > 0; ++i){
+			if(hex.charAt(i) == '0'){
 				--difficulty;
 			}else{
 				return false;

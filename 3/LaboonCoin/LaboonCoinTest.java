@@ -11,5 +11,11 @@ public class LaboonCoinTest {
 	LaboonCoin l = new LaboonCoin();
 	assertNotNull(l);
     }
+	
+	@Test
+	public void testValidHash(){
+		LaboonCoin test = new LaboonCoin();
+		assertEquals(test.validHash(2, 0000001), true);
+	}
     
 }
