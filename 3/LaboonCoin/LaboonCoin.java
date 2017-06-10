@@ -97,8 +97,8 @@ public class LaboonCoin {
 
 
         for(int i = 0; i < dataNew.length; i++){
-            int ASCII = dataNew[i];
-            n = (n * ASCII) + n;
+            int ascii = dataNew[i];
+            n = (n * ascii) + ascii;
         }
 
 	return n;

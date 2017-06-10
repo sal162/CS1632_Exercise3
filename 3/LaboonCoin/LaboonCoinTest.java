@@ -40,19 +40,19 @@ public class LaboonCoinTest {
 	@Test
 	public void testHash(){
 		LaboonCoin test = new LaboonCoin();
-		assertEquals(1809547264, test.hash("boo"));
+		assertEquals(1428150834, test.hash("boo"));
 	}
 
     @Test
 	public void testHash2(){
 		LaboonCoin test = new LaboonCoin();
-		assertEquals(708575232, test.hash("Alice and Bob $10"));
+		assertEquals(923946016, test.hash("Alice and Bob $10"));
 	}
 
     @Test
 	public void testHash3(){
 		LaboonCoin test = new LaboonCoin();
-		assertEquals(171966464, test.hash("Hello Hello Hello"));
+		assertEquals(-1941252253, test.hash("Hello Hello Hello"));
 	}
 
 	@Test
